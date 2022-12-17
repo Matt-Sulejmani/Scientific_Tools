@@ -1,0 +1,5 @@
+{
+    "distance": "m",
+    "time": ["s", "hr", "day", "week", "month", "year"],
+    "charge": ["C", "A * s"]
+}
