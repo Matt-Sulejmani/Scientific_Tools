@@ -21,6 +21,17 @@ def findCoulombDist(force: float, q1: float, q2: float) -> float:
     return math.sqrt( (const['coulombConst'] * q1 * q2) / force)
 
 '''
+    Solving complex problems using functions
+'''
+def resultantCoulombForce(type: str, **kwargs) -> float:
+    if str.lower(type) == "position":
+        pass
+
+    for charge, dist in kwargs.items():
+        
+        pass
+
+'''
 
 '''
 def electricField(q: float, r: float, force: float =None) -> float:
@@ -28,4 +39,15 @@ def electricField(q: float, r: float, force: float =None) -> float:
         return (q * const['coulombConst']) / pow(r, 2)
     
     return (force / q)
-    
+
+# Electromagnetic induction functions
+def flux(B: float, area: float, angle: float =0) -> float:
+    return (B * area * math.cos(angle))
+
+def FaradayEMF(N: float, flux: float):
+    pass
+
+def emfMoving(B: float, v: float, l: float, N: int=1):
+    return (B * v * l * N)
+
+# Power generation and transmission
