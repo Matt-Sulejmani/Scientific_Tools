@@ -1,5 +1,16 @@
 {
+    "_comment0": "Physical constants",
     "permittivityFreeSpace": 8.8541878128e-12,
     "coulombConst": 8.9875517923e9,
-    "electronCharge": 1.602176634e-19
+    "electronCharge": 1.602176634e-19,
+
+
+    "_comment1": "Chemical constants",
+    "avogadrosConst": 6.02214076e23,
+    
+    "_comment2": "The first molar gass volume is for 100kPa of pressure and the second is for 101.3kPa",
+    "molarGasVolume": [22.71095464, 22.41396954],
+
+    "_comment3": "Mathematical constants",
+    "e": 2.71828182845904523536
 }
