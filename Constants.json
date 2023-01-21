@@ -4,6 +4,8 @@
     "coulombConst": 8.9875517923e9,
     "electronCharge": 1.602176634e-19,
 
+    "planckConst": 6.62607015e-34,
+
 
     "_comment1": "Chemical constants",
     "avogadrosConst": 6.02214076e23,
