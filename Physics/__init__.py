@@ -1,1 +1,1 @@
-__all__ = ['electromagnetism', 'qunatumPhysics']
+__all__ = ['electromagnetism', 'quantumPhysics']

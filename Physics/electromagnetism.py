@@ -18,7 +18,7 @@ def findCoulombCharge(force: float, q: float, r: float) -> float:
     return (force * pow(r, 2)) / (q * const['coulombConst'])
 
 def findCoulombDist(force: float, q1: float, q2: float) -> float:
-    return math.sqrt( (const['coulombConst'] * q1 * q2) / force)
+    return math.sqrt( (const['coulombConst'] * q1 * q2) / force )
 
 '''
     Solving complex problems using functions
