@@ -12,10 +12,10 @@ with open("units.json", "r") as f:
     Include units
 '''
 def coulombForce(q1: float, q2: float, r: float) -> float:
-    return (q1 * q2 * const['coulombConst']) / pow(r, 2)
+    return (q1 * q2 * const['coulombConst']) / (r ** 2)
 
 def findCoulombCharge(force: float, q: float, r: float) -> float:
-    return (force * pow(r, 2)) / (q * const['coulombConst'])
+    return (force * (r**2) / (q * const['coulombConst']))
 
 def findCoulombDist(force: float, q1: float, q2: float) -> float:
     return math.sqrt( (const['coulombConst'] * q1 * q2) / force )

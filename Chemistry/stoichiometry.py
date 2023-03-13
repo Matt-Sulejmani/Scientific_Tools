@@ -10,7 +10,7 @@ molarVolume = const['molarGasVolume']
 
 ## Basic soticiometric conversions
 def particleToMole(particle: float) -> float:
-    return paricle / L
+    return particle / L
 
 
 def moleToParticle(mol: float) -> float:
@@ -34,8 +34,8 @@ def volumeToMol(volume: float, condition: int=0) -> float:
     return volume / molarVolume[condition]
 
 
-def molToVolume(mol: float, consdition: int=0) -> float:
-    return mol * molarVolume[0]
+def molToVolume(mol: float, condition: int=0) -> float:
+    return mol * molarVolume[condition]
 
 
 def limitingReagent(reaction: str, reactAmount1: float, reactAmount2: float, product: str) -> tuple:
