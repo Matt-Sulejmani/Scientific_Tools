@@ -1,9 +1,14 @@
+# Imports
 import json
+import element
+import sqlite3
 
+
+## Load Json file with constants
 with open('Constants.json', 'r') as f:
     const = json.load(f)
 
-## Constant declarations
+## Constant declarations and value assign
 L = const['avogadrosConst']
 molarVolume = const['molarGasVolume']
 
@@ -61,4 +66,15 @@ def limitingReagent(reaction: str, reactAmount1: float, reactAmount2: float, pro
             
     - Find limiting reagent
     '''
-    pass
+    return NotImplementedError
+
+
+def calculateMolarMass(elements: list) -> float:
+    # Initial molar mass variable
+    molarMass:float = 0.0
+
+    #Iterate over the elements that were in the input list
+    for element in elements:
+        molarMass += element.atomicMass
+
+    return molarMass

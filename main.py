@@ -1,10 +1,9 @@
+__name__ = "__main__"
+import string
 
-## Self-written Librbary imports
-from Chemistry import *
-from Physics import *
-from Maths import *
-
+## Self-written packages
+import Chemistry
 
 
 if __name__ == "__main__":
-    pass
+    NotImplemented

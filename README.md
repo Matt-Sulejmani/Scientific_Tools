@@ -1,3 +1,3 @@
-# Scientific Tools
----
-This is a repository with th epurpose of developing tools that can be used to aid in scientific calculations.
+## My first equation
+
+$$ \int _{-\infty} ^{\infty} e^{-x^2} = \sqrt \pi \ dx $$
