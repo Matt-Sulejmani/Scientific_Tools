@@ -2,9 +2,9 @@
 import string
 
 class Element(object):
-    def __init__(self):
+    def __init__(self, symbol:str):
         ## Element specific
-        self.symbol:str = ""
+        self.symbol:str = symbol
         self.name:str = ""
         self.type:str = ""
 
@@ -14,6 +14,10 @@ class Element(object):
         self.valenceElectrons: int = 0
 
         self.electronegativity:float = 0
+    
+    def selfIdentify(self):
+        self.symbol = ""
+        return NotImplementedError
 
 
 class Compound(object):
