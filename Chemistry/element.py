@@ -65,6 +65,7 @@ class Compound(object):
     #! string input -> split into elements and subscripts -> identify elements and create new objects from the elemnt class -> store element objects alonside coefficients in the compound object
     ## "Fe_2+O_3"
 
+'''
 el1 = Element()
 el2 = Element()
 
@@ -75,3 +76,4 @@ compound = Compound(el1, el2)
 compound.formula = "Fe1OH2"
 print(compound.determineElements())
 
+'''

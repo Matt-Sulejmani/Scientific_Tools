@@ -6,7 +6,7 @@ import customtkinter as ctk
 from tkinter import ttk
 
 ## Self-Written Packages
-
+from Physics import *
 
 ## Program entry point
 if __name__ == "__main__":
@@ -16,5 +16,6 @@ if __name__ == "__main__":
     window.geometry('600x400')
 
     
+
     ##? run GUI
     window.mainloop()
