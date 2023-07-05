@@ -1,31 +1,37 @@
 import numpy as np
 import math
+from fractions import Fraction
 import json
 
 with open("Constants.json", "r") as f:
     const = json.load(f)
 
+class Variable(object):
+    def __init__(self):
+        self.value: float = 0.0
+
+
 class Function(object):
     def polynomial(self, power:int, coefficients: list) -> str:
-        if power == len(coefficients):
-            polynomial = ""
-
-            ## Redefines the input list as a numpy array
-            coefficients = np.array(coefficients)
-
-            ## Cycles through the coefficients
-            for coefficient in coefficients:
-                ## If the coefficient is non-zero it saves it
-                if coefficient:
-                    polynomial += f"{coefficient}x^{power} +"
-                
-                ## Lowers the power of the x term by 1
-                power -= 1
-            
-            return polynomial.removesuffix(" +")
+        if power != len(coefficients):
+            ## Fail case - error handling
+            return "Invalid - The number of polynomial coefficients did not match the inputted power"
         
-        ## Fail case - error handling
-        return "Invalid - The number of polynomial coefficients did not match the inputted power"
+        polynomial = ""
+
+        ## Redefines the input list as a numpy array
+        coefficients = np.array(coefficients)
+
+        ## Cycles through the coefficients
+        for coefficient in coefficients:
+            ## If the coefficient is non-zero it saves it
+            if coefficient:
+                polynomial += f"{coefficient}x^{power} +"
+            
+            ## Lowers the power of the x term by 1
+            power -= 1
+        
+        return polynomial.removesuffix(" +")
 
 
 '''
@@ -75,3 +81,29 @@ def findOccurrences(string, character):
 
 exponent = Exponential()
 print(exponent())
+
+
+'''
+Types of functions:
+- Polynomial
+- Logarithmic
+- Exponential
+- Trogonometric
+
+Polynomials:
+- They are sums of different powers of x (a collection of exponential terms of x). They have:
+1.Terms consisting of variables
+2.A power ascoitated to each term
+
+powers can be stored on a list.
+To obtain a numerical value (in graphing) you could substitue the variable and raise it to the given powers
+How to save expression? (string format)
+'''
+
+'''
+A function or expression is:
+f(x) = x**2 + x + 1
+y - 1 = x**2 + x
+
+'''
+#! Problem 1 - Standardize expressions

@@ -1,7 +1,5 @@
 ## Standard library imports
-import string
 import math
-import string
 
 
 class Element(object):
@@ -17,34 +15,39 @@ class Element(object):
         self.atomicNumber:int = 0
         self.atomicMass:float = 0.0
         self.charge:int = 0
-        self.charge: int = 0
 
         self.electronegativity:float = 0
     
     #? This function returns the compound formal of 2 reacting elements in string format
     # Currently only work if 2 simple elements are reacting
     #! No security checks (ocet rule, if two metals or gasses are reacting)
-    def react(self, element) -> str:
+    def react(self, element) -> object:
+        ## If two metals react then there will be no reaction
+        if self.type == element.type == "metal":        #? Two metals cannot react (unless alloy), security check
+            return None
+
         lcm = math.lcm(self.charge, element.charge)     #* Find the lowest common multiple of the valence electron numbers
-        self.subscript = lcm // self.charge                       #* The balacing coefficient for the first element
-        element.subscript = lcm // element.charge                 #* The balancing coefficient for the second element
+        self.subscript = abs(lcm // self.charge)        #* The balacing coefficient for the first element
+        element.subscript = abs(lcm // element.charge)  #* The balancing coefficient for the second element
         
-        return Compound(self, element)                                      #? Returns a compound
+        return Compound(self, element)                  #? Returns a compound
 
 
 class Compound(object):
     def __init__(self, *args:Element):
         ## Compound identifyers
         self.name:str =""                           #* Name of the chemical compound
-        self.formula:str = f""                      #* Chemical formula of the compound
+        self.formula:str = ""                       #* Chemical formula of the compound
         # self.components:dict = {element.symbol: element.charge for element in args}       #* Elments/ Polyatomic ions that make up the compound and their valence electrons
         self.components: list = list(args)          #* List that contains the element objects that make up the compound
 
         ## Compound properties
         self.molarMass: float = 0.0
+        self.bondEnthalpy: float = 0.0              #! This is based on the elements like the molar mass but the values are standard meanign it should be read from database
 
         for element in self.components:
-            self.molarMass += element.atomicMass
+            self.molarMass += element.atomicMass                                #* Determine the moalr mass of the compound
+            self.formula += f"{element.symbol + str(element.subscript)}"        #* Determine the formula from the consituent components
 
     def reactElement(self, element):
         ## If element charge is < 0 then it is a gas
@@ -61,32 +64,8 @@ class Compound(object):
         #! Make sure to distinguish gasses from metals and save the compound in the correct order
     
     def reactCompound(self, compound):
-        pass
+        return NotImplementedError
 
-    ## Find the number subscripts of each element in the case that the compound is given as input
-    ## Private function
-    def findElementNumbers(self) -> list:
-        if self.formula:
-            indexes = [index for index, character in enumerate(self.formula) if character in string.digits]
-            
-            return indexes
-
-        return "Value not Found" #! Replace with error message
-    
-    def determineElements(self) -> dict:
-        indexes = self.findElementNumbers()
-
-        if len(indexes) == 2:
-            element1 = self.formula[0:indexes[0]]
-            element2 = self.formula[indexes[0] + 1: indexes[1]]
-
-            ## Want to create 2 element instances based on the formula/ name of the elements form the compound
-            ## Assign the corresponding propertties during the process
-            ## Store in the list
-            return element1, element2
-    
-    #? string input -> split into elements and subscripts -> identify elements and create new objects from the elemnt class -> store element objects alonside coefficients in the compound object
-    ## "Fe_2+O_3"
 
 '''
 Element class functionallity:
@@ -131,50 +110,22 @@ metal (element object) + oxygen (element object) -> react (function) -> metal ox
 3. The compound that gets formed has new properties(mixed - some based on reactants and some new) and a new formula(based on the reactants)
 '''
 
-def reactStructure(*args):
-    reactantElements = {}           #* Dictionary that contains all the elements (even parts of compounds) and their valence electrons
-    
-    ## Loop over the reactants, pair element symbol and valence electrons for element object inputs and append the components dictionary for compound objects
-    for reactant in args:
-        if type(reactant) == Element:
-            reactantElements[reactant.symbol] = reactant.charge
-        
-        else:
-            reactantElements = reactantElements | reactant.components
-    
-    print(reactantElements)
-
-
-def redox(*args: Element) -> list:
-    return NotImplementedError
-
-
-def neutralization(*args: Element)-> list:
-    return NotImplementedError
-
-
-def singleSub(*args: Element)-> list:
-    return NotImplementedError
-
-
-def doubleSub(*args: Element)-> list:
-    return NotImplementedError
-
-
-def decomposition(*args: Element)-> list:
-    return NotImplementedError
-
-
 el1 = Element('Fe')
 el1.charge = 3
+el1.type = "metal"
 
 el2 = Element('O')
 el2.charge = -2
+el2.type = "gas"
 
 el3 = Element('Cu')
 el3.charge = 2
+el3.type = "metal"
 
 el4 = Element('F')
 el4.charge = -1
+el4.type = "gas"
 
-compound = Compound(el3, el2)
+compound = el4.react(el2)
+
+print(compound.components, compound.formula)
