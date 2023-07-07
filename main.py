@@ -12,8 +12,13 @@ from Physics import *
 if __name__ == "__main__":
     ##? GUI setup
     window = tk.Tk()
-    window.title('Scientific tools by Matteo')
+    window.title('Sci Tools by Matteo')
+    # window.iconbitmap()
     window.geometry('600x400')
+
+    ## Window Properties
+    window.minsize(600, 400)
+    window.attributes('-topmost', True)
     
     
 

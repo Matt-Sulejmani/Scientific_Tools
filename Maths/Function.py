@@ -6,10 +6,6 @@ import json
 with open("Constants.json", "r") as f:
     const = json.load(f)
 
-class Variable(object):
-    def __init__(self):
-        self.value: float = 0.0
-
 
 class Function(object):
     def polynomial(self, power:int, coefficients: list) -> str:
@@ -66,21 +62,21 @@ class Logarithmic(object):
 
 
 class Polynomial(object):
-    def __init__(self, degree: int =1, coefficient:list =[]):
-        self.degree = degree
+    def __init__(self, formula: str):
+        self.formula: list = formula.replace(' ', '').split('+')         #* Standardise the input
+        self.constTerm: float = 0.0
 
-    def __call__(self):
-        pass
+        for element in self.formula:
+            if 'x' in element:
+                pass
+
+            self.constTerm += float(element)
+
 
 
 
 def findOccurrences(string, character):
     return [i for i, letter in enumerate(string) if letter == character]
-
-
-
-exponent = Exponential()
-print(exponent())
 
 
 '''
@@ -107,3 +103,6 @@ y - 1 = x**2 + x
 
 '''
 #! Problem 1 - Standardize expressions
+
+print('x**2 + x + 1 + 5 + 3'.replace(' ', '').split('+'))
+

@@ -1,2 +1,2 @@
 #! Important import statements from other files in this folder
-from .element import Element, Compound
+from element import *

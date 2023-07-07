@@ -38,7 +38,6 @@ class Compound(object):
         ## Compound identifyers
         self.name:str =""                           #* Name of the chemical compound
         self.formula:str = ""                       #* Chemical formula of the compound
-        # self.components:dict = {element.symbol: element.charge for element in args}       #* Elments/ Polyatomic ions that make up the compound and their valence electrons
         self.components: list = list(args)          #* List that contains the element objects that make up the compound
 
         ## Compound properties

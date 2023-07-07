@@ -21,11 +21,6 @@ def particleToMole(particle: float) -> float:
 def moleToParticle(mol: float) -> float:
     return mol * L
 
-##! NEEDS attention
-def molarMassCalc(*args: str) -> float:
-    for element in args:
-        element.casefold()
-
 
 def massToMol(mass: float, molarMass: float) -> float:
     return mass / molarMass
