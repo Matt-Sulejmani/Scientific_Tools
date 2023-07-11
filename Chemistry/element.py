@@ -1,25 +1,26 @@
 ## Standard library imports
 import math
+import numpy as np
+from dataclasses import dataclass, field
 
 
-class Element(object):
-    def __init__(self, symbol:str):
-        ##? Element identifiers
-        self.symbol:str = symbol        #* The chemical symbol in the perioidc table
-        self.name:str = ""              #* The full name of the element
-        self.state:str = ""             #* Gas, liquid or solid
-        self.type:str = ""              #* Gas or metal (Could also be based on group name)
-        self.subscript: int = 0
+@dataclass(slots=True)
+class Element:
+    ##? Element identifiers
+    symbol:str              #* The chemical symbol in the perioidc table
+    name:str = ''           #* The full name of the element
+    state:str = ''          #* Gas, liquid or solid
+    type:str = ''           #* Gas or metal (Could also be based on group name)
+    subscript: np.int8 = np.int8(0)
 
-        ##? Element properties
-        self.atomicNumber:int = 0
-        self.atomicMass:float = 0.0
-        self.charge:int = 0
+    ##? Element properties
+    atomicNumber: np.int8 = np.int8(0)
+    atomicMass: np.float32 = np.float32(0.0)
+    charge: np.int8 = np.int8(0)
 
-        self.electronegativity:float = 0
+    electronegativity: np.float32 = np.float32(0.0)
     
-    #? This function returns the compound formal of 2 reacting elements in string format
-    # Currently only work if 2 simple elements are reacting
+    #? This function returns a compound class instance/ object of 2 reacting elements
     #! No security checks (ocet rule, if two metals or gasses are reacting)
     def react(self, element) -> object:
         ## If two metals react then there will be no reaction
@@ -31,22 +32,30 @@ class Element(object):
         element.subscript = abs(lcm // element.charge)  #* The balancing coefficient for the second element
         
         return Compound(self, element)                  #? Returns a compound
+    
+    @classmethod
+    def _standardize(cls) -> None:
+        ##! This function will turn all the currently used class instances into the same units
+        return NotImplementedError
 
 
-class Compound(object):
-    def __init__(self, *args:Element):
-        ## Compound identifyers
-        self.name:str =""                           #* Name of the chemical compound
-        self.formula:str = ""                       #* Chemical formula of the compound
-        self.components: list = list(args)          #* List that contains the element objects that make up the compound
+@dataclass(slots=True)
+class Compound:
+    ## Compound identifyers
+    name:str =""                           #* Name of the chemical compound
+    formula:str = ""                       #* Chemical formula of the compound
+    components: list[Element] = field(default_factory=list)                 #* List that contains the element objects that make up the compound
 
-        ## Compound properties
-        self.molarMass: float = 0.0
-        self.bondEnthalpy: float = 0.0              #! This is based on the elements like the molar mass but the values are standard meanign it should be read from database
+    ## Compound properties
+    molarMass: float = 0.0
+    bondEnthalpy: float = 0.0              #! This is based on the elements like the molar mass but the values are standard meaning it should be read from database
+
+    def __post_init__(self, *args):
+        self.components: list = list(args)        
 
         for element in self.components:
-            self.molarMass += element.atomicMass                                #* Determine the moalr mass of the compound
-            self.formula += f"{element.symbol + str(element.subscript)}"        #* Determine the formula from the consituent components
+            molarMass += element.atomicMass                                #* Determine the moalr mass of the compound
+            formula += f"{element.symbol + str(element.subscript)}"        #* Determine the formula from the consituent components
 
     def reactElement(self, element):
         ## If element charge is < 0 then it is a gas
