@@ -32,11 +32,6 @@ class Element:
         element.subscript = abs(lcm // element.charge)  #* The balancing coefficient for the second element
         
         return Compound(self, element)                  #? Returns a compound
-    
-    @classmethod
-    def _standardize(cls) -> None:
-        ##! This function will turn all the currently used class instances into the same units
-        return NotImplementedError
 
 
 @dataclass(slots=True)

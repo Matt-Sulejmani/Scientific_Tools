@@ -25,4 +25,3 @@ class Enthalpy(object):
 
     def ionizationEnergy(self):
         pass
-    

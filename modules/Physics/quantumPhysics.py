@@ -1,6 +1,7 @@
 ## Library imports for the package
 import math
 import json
+from quantities import Quantity
 
 ## Standard imports from the constants and units files
 with open("Constants.json", "r") as f:
