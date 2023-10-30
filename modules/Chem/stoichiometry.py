@@ -21,11 +21,6 @@ def particleToMole(particle: float) -> float:
 def moleToParticle(mol: float) -> float:
     return mol * L
 
-##! NEEDS attention
-def molarMassCalc(*args: str) -> float:
-    for element in args:
-        element.casefold()
-
 
 def massToMol(mass: float, molarMass: float) -> float:
     return mass / molarMass
@@ -67,14 +62,3 @@ def limitingReagent(reaction: str, reactAmount1: float, reactAmount2: float, pro
     - Find limiting reagent
     '''
     return NotImplementedError
-
-
-def calculateMolarMass(elements: list) -> float:
-    # Initial molar mass variable
-    molarMass:float = 0.0
-
-    #Iterate over the elements that were in the input list
-    for element in elements:
-        molarMass += element.atomicMass
-
-    return molarMass

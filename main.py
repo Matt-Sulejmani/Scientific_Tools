@@ -1,9 +1,13 @@
-__name__ = "__main__"
-import string
+# System imports
 
-## Self-written packages
-import Chemistry
+# Module imports
+import tkinter as Tk
+
+# Package imports
+from settings import _base
+from modules import *
 
 
+## Program entry point
 if __name__ == "__main__":
-    NotImplemented
+    ...

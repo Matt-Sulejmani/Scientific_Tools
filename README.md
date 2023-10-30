@@ -1,3 +1,9 @@
-## My first equation
+# Sci Tools Documentation
+---
+## Table of contents
+1. SciTools modules
 
-$$ \int _{-\infty} ^{\infty} e^{-x^2} = \sqrt \pi \ dx $$
+
+## Math Module
+## Chemistry Module
+## Physics Module
