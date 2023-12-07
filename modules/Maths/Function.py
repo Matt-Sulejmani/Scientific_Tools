@@ -1,108 +1,52 @@
-import numpy as np
-import math
-from fractions import Fraction
-import json
+# Standard library imports
+from typing import Tuple
 
-with open("Constants.json", "r") as f:
-    const = json.load(f)
+# Type aliases
+type Number = int | float
 
 
-class Function(object):
-    def polynomial(self, power:int, coefficients: list) -> str:
-        if power != len(coefficients):
-            ## Fail case - error handling
-            return "Invalid - The number of polynomial coefficients did not match the inputted power"
-        
-        polynomial = ""
+class LinearFunc:
+    def __init__(self, *args: Tuple[Number]):
+        self.points = list(args)
 
-        ## Redefines the input list as a numpy array
-        coefficients = np.array(coefficients)
+    def addPoints(self, *args: Tuple[Number]) -> None:
+        '''Enter the points you want the function to remember in the format (x, y).
+        All the points should be entered according to this format and separated
+        by a comma.'''
+        self.points.extend(args)
 
-        ## Cycles through the coefficients
-        for coefficient in coefficients:
-            ## If the coefficient is non-zero it saves it
-            if coefficient:
-                polynomial += f"{coefficient}x^{power} +"
-            
-            ## Lowers the power of the x term by 1
-            power -= 1
-        
-        return polynomial.removesuffix(" +")
+    def removePoints(self, *args: int) -> None:
+        '''Enter the index of the points you want to delete from the functions 
+        memory.'''
+        for index in args:
+            del self.points[index]
 
+    def __repr__(self) -> str:
+        '''Prints the list of points the function is storing.'''
+        return f"{self.points}"
 
-'''
-    An object made using the Exponential class contains the following information:
-    - The base (acessed through object.base)
-    - The exponent (acessed through object.exponent)
-    - The numerical value (acessed through object())
-'''
+    @property
+    def slope(self) -> Number:
+        '''Slope of the linear function, based on the list of data points provided 
+        when creating the function itself.'''
+        point1, point2 = self.points[0], self.points[-1]
 
-class Exponential(object):
-    ## What happens when the variable is declared/ created
-    def __init__(self, base: float =const['e'], exponent:float =1):
-        self.base = base
-        self.exponent = exponent
+        # Formula: a = (y2 - y1) / (x2 - x1)
+        return (point2[1] - point1[1]) / (point2[0]-point1[0])
 
-    ## What happens when varibale is called (baisically makes it like a function)
-    def __call__(self):
-        ## When the object is called it will return the numerical value 
-        return math.pow(self.base, self.exponent)
+    @property
+    def yIntercept(self) -> Number:
+        '''The y-intercept of the linear function.'''
+        point = self.points[0]
 
-    def derivative(self, order:int =1):
-        pass
+        # Fomula: c = y1 - ax1
+        return point[1] - self.slope * point[0]
 
 
-class Logarithmic(object):
-    def __init__(self, base:float =const['e'], value:float =1):
-        self.base = base
-        self.value = value
+class Polynomial:
+    def __init__(self, *args):
+        self.points = list(args)
 
-    def __call__(self):
-        pass
-
-
-class Polynomial(object):
-    def __init__(self, formula: str):
-        self.formula: list = formula.replace(' ', '').split('+')         #* Standardise the input
-        self.constTerm: float = 0.0
-
-        for element in self.formula:
-            if 'x' in element:
-                pass
-
-            self.constTerm += float(element)
-
-
-
-
-def findOccurrences(string, character):
-    return [i for i, letter in enumerate(string) if letter == character]
-
-
-'''
-Types of functions:
-- Polynomial
-- Logarithmic
-- Exponential
-- Trogonometric
-
-Polynomials:
-- They are sums of different powers of x (a collection of exponential terms of x). They have:
-1.Terms consisting of variables
-2.A power ascoitated to each term
-
-powers can be stored on a list.
-To obtain a numerical value (in graphing) you could substitue the variable and raise it to the given powers
-How to save expression? (string format)
-'''
-
-'''
-A function or expression is:
-f(x) = x**2 + x + 1
-y - 1 = x**2 + x
-
-'''
-#! Problem 1 - Standardize expressions
-
-print('x**2 + x + 1 + 5 + 3'.replace(' ', '').split('+'))
-
+    @property
+    def degree(self) -> int:
+        return 0

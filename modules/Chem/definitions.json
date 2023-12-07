@@ -1,0 +1,9 @@
+{
+    "Process Classifications": {
+        "batch": "",
+        "continuous": "",
+        "semibatch": "",
+        "steady-state": "",
+        "transient": ""
+    }
+}
