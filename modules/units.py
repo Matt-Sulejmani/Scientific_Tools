@@ -1,5 +1,7 @@
 from dataclasses import dataclass
 
+# TODO - Look into using units as a meta class in quantities
+
 type meter      = standard_unit
 type second     = standard_unit
 type candela    = standard_unit
