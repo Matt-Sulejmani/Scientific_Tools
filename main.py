@@ -4,7 +4,7 @@
 import tkinter as Tk
 
 # Package imports
-from settings import _base
+
 from modules import *
 
 

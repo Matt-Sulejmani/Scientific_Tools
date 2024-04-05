@@ -1,16 +1,23 @@
+# Standard library imports (Python 3.12)
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, List
 from numbers import Real
 
+# Dependencies
 import numpy as np
 
+# Custom module imports
+from exceptions import IncompatibleUnits, InvalidVectorArithemtic
 from units import *
 
 
+# TODO - Vector class documentation (review)
+# TODO - Vector dot, cross and scalar multiplication
+# TODO - Review Quantity class and arithmetic operations
+# TODO - Write tests
+# TODO - Write automated logs/ custom exceptions
 
-class InvalidVectorArithemtic(Exception): pass
-class IncompatibleUnits(Exception): pass
 
 
 class Vector:
@@ -25,12 +32,11 @@ class Vector:
             represent the vector. 
             Defaults to [0, 0, 0].
         """
-
         self.position = np.array(position, np.float32)
         self.x, self.y, self.z = iter(position)                       
     
     @staticmethod
-    def is_vector(argument: Any) -> None:
+    def is_vector(arg: Any) -> None:
         """
         This function checks if the argument passed in is a vector or not.
 
@@ -38,18 +44,29 @@ class Vector:
             argument (Any): The argument that gets type checked
 
         Raises:
-            TypeError: If the argument passed in was not of type (Vector)
-            then the function raises a TypeError.
+            InvalidVectorArithemtic: The function raises an Invalid Vector 
+            Arithmetic exception when the argument passed in is not an instance
+            of a vector class
 
         Returns:
-            None: If the argument is a vector then the function returns None.
+            None: If the argument is a vector then the function 
+            returns None.
         """
-        if type(argument) != Vector:
-            raise TypeError
+        try:
+            if not isinstance(arg, Vector):
+                raise InvalidVectorArithemtic
+            
+        except InvalidVectorArithemtic:
+            raise InvalidVectorArithemtic("Attempted arithmetic between vector and non-vector types")
         
         return None
 
-    def __repr__(self) -> str:
+    def __str__(self) -> str:
+        """
+        Returns:
+            str: The value that gets printed when print is called on an intance
+            of the class
+        """
         return f'{self.position}'
 
     
@@ -60,24 +77,13 @@ class Vector:
         Args:
             other (Vector): The second vector value that gets added
 
-        Raises:
-            InvalidVectorArithemtic: This error is raised when an invalid 
-            operation was attempted. 
-
         Returns:
             Vector: The result of the vector addition
         """
-        try:
-            self.is_vector(other)
-            return Vector(np.add(self.position, other.position))
+        self.is_vector(other)
+        return Vector(np.add(self.position, other.position))
 
-        except TypeError:
-            return InvalidVectorArithemtic("Attempted arithmetic between vector and non-vector types")
-        
-        except:
-            return InvalidVectorArithemtic("Invalid vector arithmetic was attempted")
 
-    
     def __sub__(self, other: Vector) -> Vector:
         """
         This function defines how two vector quantities are subtracted from each 
@@ -86,40 +92,34 @@ class Vector:
         Args:
             other (Vector): The vector that gets subtracted from self
 
-        Raises:
-            InvalidVectorArithemtic: This error is raised when an invalid 
-            operation was attempted. 
-
         Returns:
             Vector: The result of the vector subtraction
         """
-        try:
-            self.is_vector(other)
-            return Vector(np.subtract(self.position, other.position))
-
-        except TypeError:
-            return InvalidVectorArithemtic("Attempted arithmetic between vector and non-vector types")
-        
-        except:
-            return InvalidVectorArithemtic("Invalid vector arithmetic was attempted")
+        self.is_vector(other)
+        return Vector(np.subtract(self.position, other.position))
     
-    def __mul__(self, other: Vector) -> Vector:
 
+    def __mul__(self, other: Vector) -> Vector:
+        # Vector cross multiplication
         pass
 
     def __rmul__(self, other: Real) -> Real:
+        # Vector dot multiplication
         pass
 
 
 
 @dataclass(slots=True)
 class Quantity:
-    
     value: Real
     units: standard_unit|derived_unit                             
     direction: Vector = field(default=Vector())                     
 
     def __str__(self) -> str:
+        """
+        Returns:
+            str: The value that gets used when an instance is printed 
+        """
         return f"{self.value}{self.units}"
     
     
@@ -142,45 +142,52 @@ class Quantity:
             None: If both the type and units of the argument are ok then the
             function returns None
         """
-        if type(other) != Quantity:
-            raise TypeError
+        try:
+            if not isinstance(other, Quantity):
+                raise TypeError
+            
+            if other.units != self.units:
+                raise IncompatibleUnits
+            
+        except TypeError:
+            return NotImplemented
         
-        if other.units != self.units:
-            raise IncompatibleUnits
+        except IncompatibleUnits as error:
+            raise error("Attempted additon of two quantities with incompatible units")
 
         return None
 
     
     ##? Dunder methods that get called when arithmetic operators are used
-    def __add__(self, other):
-        try:
-            self.check_units(other)
-            
-            mag = self.magnitude + other.magnitude          #* Temporary variable to store the result of magnitude addition
-            vec = self.direction + other.direction          #* Temporary variable to store the vector addition
-            
-            return Quantity(mag, self.units, direction=vec)
-        
-        except TypeError:
-            raise 
+    def __add__(self, other: Vector) -> Vector:
+        """
+        The addtion function that gets called when a "+" operator is used. This 
+        function defines the behaviour of the addition of 2 quantities and
+        retuns the sum of the operation as a new quantity instance.
 
-        except IncompatibleUnits as error:
-            raise error("Attempted additon of two quantities with incompatible units")
+        For the in-place operation see self.__iadd__
+
+        Args:
+            other (Vector): The quantity to the right of the "+" operator
+
+        Returns:
+            Vector: The sum of the two Quantity instances
+        """
+        self.check_units(other)
+        
+        mag = self.magnitude + other.magnitude          #* Temporary variable to store the result of magnitude addition
+        vec = self.direction + other.direction          #* Temporary variable to store the vector addition
+        
+        return Quantity(mag, self.units, vec)
+
     
-    def __sub__(self, other):
-        try:
-            self.check_units(other)
-            
-            mag = self.magnitude - other.magnitude          #* Temporary variable to store the result of magnitude subtraction
-            vec = self.direction - other.direction          #* Temporary variable to store the vector subtraction
-            
-            return Quantity(mag, self.units, direction=vec)
+    def __sub__(self, other: Vector) -> Vector:
+        self.check_units(other)
         
-        except TypeError:
-            return NotImplemented
+        mag = self.magnitude - other.magnitude          #* Temporary variable to store the result of magnitude subtraction
+        vec = self.direction - other.direction          #* Temporary variable to store the vector subtraction
         
-        except IncompatibleUnits as error:
-            raise error("")
+        return Quantity(mag, self.units, vec)
         
     def __radd__(self, other):
         try:
@@ -220,6 +227,6 @@ vec1 = Vector([1,2,3])
 vec2 = Vector([3,4,5])
 
 print(vec1-vec2)
-print(type(vec1-vec2))
-print(vec1-5)
+print(type(vec1+vec2))
+print(vec1)
 print()
