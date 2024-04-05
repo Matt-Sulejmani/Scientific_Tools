@@ -1,108 +1,218 @@
-import numpy as np
-import math
-from fractions import Fraction
-import json
-
-with open("Constants.json", "r") as f:
-    const = json.load(f)
+# Standard library imports
+from __future__ import annotations
+from numbers import Rational, Real
+from typing import  Any, Dict, List, Tuple, override
 
 
-class Function(object):
-    def polynomial(self, power:int, coefficients: list) -> str:
-        if power != len(coefficients):
-            ## Fail case - error handling
-            return "Invalid - The number of polynomial coefficients did not match the inputted power"
+# Custom type aliases
+
+type Point = Tuple[Real, Real]
+
+# Custom exceptions
+class RepeatedXValue(Exception): pass
+class NumberTypeError(Exception): pass
+
+
+# Base function class
+class _Function:
+    def __init__(self, *args: Point, func: function = None) -> None:
+        self.points:    Dict[Real, Real] = {}
+        self.domain:    List[Real] = []
+        self.range:     List[Real] = []
+        self.function:  function = func
+        self.fType:     str = ''
+
+        try:
+            for x, y in iter(args):
+                if x in self.points and self.points[x] != y:
+                    raise RepeatedXValue
+                
+                self.points[x] = y
+                self.domain.append(x)
+                self.range.append(y)
+
+        except RepeatedXValue:
+            raise RepeatedXValue(f"x={x} is being related to multiple y values")
+
+
+    def __call__(self, *args: Real) -> List[Real]:
+        return [self.func(x) for x in args]
+    
+    @staticmethod
+    def isReal(arg: Any) -> None:
+        """
+        Checks if the argument passed in is an instance of a Real number (int or
+        float). If not then the function raises an exception.
+
+        Args:
+            arg (Any): The argument which gets type checked
+
+        Raises:
+            NumberTypeError: The exception raised when the argument is not a 
+            float or int. Additionally, it displays the type of the argument
+            that was passed in
+            e: General exception
+        """
+        try:
+            if not isinstance(arg, Real):
+                raise TypeError
+    
+        except TypeError:
+            raise NumberTypeError(f"Detected invalid argument type: {type(arg)}. Argument type must be int or float.")
         
-        polynomial = ""
+        except Exception as e:
+            raise e
 
-        ## Redefines the input list as a numpy array
-        coefficients = np.array(coefficients)
-
-        ## Cycles through the coefficients
-        for coefficient in coefficients:
-            ## If the coefficient is non-zero it saves it
-            if coefficient:
-                polynomial += f"{coefficient}x^{power} +"
-            
-            ## Lowers the power of the x term by 1
-            power -= 1
-        
-        return polynomial.removesuffix(" +")
-
-
-'''
-    An object made using the Exponential class contains the following information:
-    - The base (acessed through object.base)
-    - The exponent (acessed through object.exponent)
-    - The numerical value (acessed through object())
-'''
-
-class Exponential(object):
-    ## What happens when the variable is declared/ created
-    def __init__(self, base: float =const['e'], exponent:float =1):
-        self.base = base
-        self.exponent = exponent
-
-    ## What happens when varibale is called (baisically makes it like a function)
-    def __call__(self):
-        ## When the object is called it will return the numerical value 
-        return math.pow(self.base, self.exponent)
-
-    def derivative(self, order:int =1):
+    def graph(self):
         pass
 
 
-class Logarithmic(object):
-    def __init__(self, base:float =const['e'], value:float =1):
-        self.base = base
-        self.value = value
 
-    def __call__(self):
+
+
+class LinearFunc(_Function):
+    """ A class representing a linear function - f(x) = mx + c """
+    @override
+    def __init__(self, *args: Point) -> None:
+        super().__init__(*args, func=None)
+        self.fType = "Linear"
+
+        self._slope: Real = 0 
+        self._yIntercept: Real = 0
+
+
+    def add_points(self, *args: Point) -> None:
+        '''Enter the points you want the function to remember in the format (x, y).
+        All the points should be entered according to this format and separated
+        by a comma.'''
+        self.points.extend(args)
+
+
+    def __str__(self) -> str:
+        """
+        Returns:
+            str: Formatted string representation of the function formula
+        """
+        return f"f(x) = {self.slope}x {"+ " + str(self.yIntercept) if self.yIntercept >= 0 else self.yIntercept}"
+    
+
+    @property
+    def slope(self) -> float:
+        """
+        Slope of the linear function, based on the list of data points provided 
+        when creating the function itself. \n
+        
+        Formula: m = (y2 - y1) / (x2 - x1)
+
+        Returns:
+            float: Returns the slope as a float value
+        """
+        if self._slope:
+            # Returns the existing slope value if there is one 
+            return self._slope
+    
+        x1, x2 = self.domain[0], self.domain[-1]
+        y1, y2 = self.points[x1], self.points[x2]
+        self._slope =  (y2 - y1) / (x2 - x1)
+
+        return self._slope
+
+    @slope.setter
+    def slope(self, slope_value: Real) -> None:
+        """
+        Set the value of the slope for the function instance manually.
+
+        Args:
+            slope_value (Real): The desired slope value as an int or float
+        """
+        self.isReal(slope_value)
+        
+        self._slope = slope_value 
+
+    @property
+    def yIntercept(self) -> Real:
+        """
+        Fomula: c = y1 - m * x1
+
+        Returns:
+            int|float: Returns the y-intercept (c)
+        """
+        if self._yIntercept:
+            return self._yIntercept
+        
+        x = self.domain[0]
+        y = self.points[x]
+        
+        return y - self.slope * x
+    
+    @yIntercept.setter
+    def yIntercept(self, y_intercept: Real) -> None:
+        """
+        Set the value of the y-intercept for the function instance manually.
+
+        Args:
+            slope_value (Real): The desired y-intercept value as an int or float
+        """
+        self.isReal(y_intercept)
+        
+        self._yIntercept = y_intercept
+
+
+    def calculate(self) -> None:
+        self.range = [self._slope * x + self._yIntercept for x in self.domain]
+
+
+    @override
+    def __call__(self) -> None:
         pass
 
 
-class Polynomial(object):
-    def __init__(self, formula: str):
-        self.formula: list = formula.replace(' ', '').split('+')         #* Standardise the input
-        self.constTerm: float = 0.0
-
-        for element in self.formula:
-            if 'x' in element:
-                pass
-
-            self.constTerm += float(element)
 
 
 
+class Polynomial(_Function):
+    """ A class representing a polynomial function - f(x) = ax^n + bx^(n-1) + ... """
+    @override
+    def __init__(self, *args: Point) -> None:
+        super().__init__(*args)
+        self.fType = "Polynomial"
 
-def findOccurrences(string, character):
-    return [i for i, letter in enumerate(string) if letter == character]
+
+    @property
+    def degree(self) -> int:
+        return 0
+    
 
 
-'''
-Types of functions:
-- Polynomial
-- Logarithmic
-- Exponential
-- Trogonometric
+class PowerFunction(_Function):
+    @override
+    def __init__(self, power: int | Rational, *args: Point) -> None:
+        super().__init__(*args)
+        self.fType = "Power Fuction"
 
-Polynomials:
-- They are sums of different powers of x (a collection of exponential terms of x). They have:
-1.Terms consisting of variables
-2.A power ascoitated to each term
+        self.power = power
 
-powers can be stored on a list.
-To obtain a numerical value (in graphing) you could substitue the variable and raise it to the given powers
-How to save expression? (string format)
-'''
+    def __str__(self) -> str:
+        return f"x^{self.power}"
+    
 
-'''
-A function or expression is:
-f(x) = x**2 + x + 1
-y - 1 = x**2 + x
+    def __call__(self) -> Real:
+        pass
 
-'''
-#! Problem 1 - Standardize expressions
 
-print('x**2 + x + 1 + 5 + 3'.replace(' ', '').split('+'))
+lin1 = LinearFunc((1,2), (2,4), (3,6), (4,8))
+
+print(lin1.points)
+
+print(lin1.slope)
+
+print(lin1.yIntercept)
+
+
+
+
+
+
+print(PowerFunction(4))
+
 

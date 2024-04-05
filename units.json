@@ -1,5 +1,31 @@
 {
-    "distance": "m",
-    "time": ["s", "hr", "day", "week", "month", "year"],
-    "charge": ["C", "A * s"]
+    "SI": {
+        "mass": "kg",
+        "length": "m",
+        "time": "s",
+        "temperature": "K",
+        "amount": "mol",
+        "current": "A",
+        "lightIntensity": "cd"
+    },
+    "US": {
+        "mass": "kg",
+        "length": "m",
+        "time": "s",
+        "temperature": "K",
+        "amount": "mol",
+        "current": "A",
+        "lightIntensity": "cd"
+    },
+    "multiples": {
+        "T": 10e12,
+        "G": 10e9,
+        "M": 10e6,
+        "k": 10e3,
+        "": 10e0,
+        "c": 10e-2,
+        "m": 10e-3,
+        "μ": 10e-6,
+        "n": 10e-9
+    }
 }
