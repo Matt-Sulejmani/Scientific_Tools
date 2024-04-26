@@ -1,16 +1,21 @@
-# Standard library imports
+# Standard library imports (Python 3.12)
 from __future__ import annotations
+
 from numbers import Rational, Real
 from typing import  Any, Dict, List, Tuple, override
 
 
-# Custom type aliases
+# Dependencies
 
+
+
+# Custom Exceptions imports
+from ..exceptions import RepeatedXValue, NumberTypeError
+
+
+# Custom type aliases
 type Point = Tuple[Real, Real]
 
-# Custom exceptions
-class RepeatedXValue(Exception): pass
-class NumberTypeError(Exception): pass
 
 
 # Base function class

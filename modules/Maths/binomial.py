@@ -1,5 +1,5 @@
 import math
-from Function import *
+from modules.maths.functions import *
 
 def expandBinomial(expr: str, power: int=1) -> str:
     ##* This splits the string input into sperate parts denoted by the x 
