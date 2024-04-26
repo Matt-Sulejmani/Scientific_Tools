@@ -1,5 +1,4 @@
 #! Important import statements from other files in this folder
-from element import *
+import logging
 
-import calculations
-
+logging.getLogger(__name__)
