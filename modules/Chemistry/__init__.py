@@ -1,2 +1,4 @@
 #! Important import statements from other files in this folder
-from element import *
+import logging
+
+logging.getLogger(__name__)
